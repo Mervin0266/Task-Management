@@ -1,0 +1,52 @@
+<ng-container *ngIf="task$ | async as task">
+  <div class="detail" [appPriorityHighlight]="task">
+    <div class="header">
+      <button mat-icon-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h2>{{ task.title }}</h2>
+        <p>{{ task.description }}</p>
+      </div>
+      <span class="spacer"></span>
+      <button mat-stroked-button color="accent" (click)="edit(task)">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-flat-button color="primary" (click)="markComplete(task)" [disabled]="task.status === 'completed'">
+        <mat-icon>check_circle</mat-icon>
+        Mark Complete
+      </button>
+    </div>
+
+    <div class="meta">
+      <mat-card>
+        <mat-card-title>Schedule</mat-card-title>
+        <mat-card-content>
+          <p><strong>Due:</strong> {{ task.dueDate | date: 'fullDate' }}</p>
+          <p><strong>Status:</strong> {{ task.status | titlecase }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Progress</mat-card-title>
+        <mat-card-content>
+          <mat-progress-bar [value]="task.progress" mode="determinate"></mat-progress-bar>
+          <p class="muted">{{ task.progress }}% complete</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Tags</mat-card-title>
+        <mat-card-content>
+          <mat-chip-listbox *ngIf="task.tags?.length; else noTags">
+            <mat-chip *ngFor="let tag of task.tags" color="accent" selected>{{ tag }}</mat-chip>
+          </mat-chip-listbox>
+          <ng-template #noTags>
+            <p class="muted">No tags</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,31 @@
+<mat-toolbar color="primary" class="nav-bar" data-testid="navbar">
+  <div class="brand" (click)="navigate('/tasks')">
+    <mat-icon>task_alt</mat-icon>
+    <span>FocusFlow</span>
+  </div>
+  <span class="spacer"></span>
+  <button mat-button (click)="navigate('/tasks')">
+    <mat-icon>list</mat-icon>
+    All Tasks
+  </button>
+  <button mat-button (click)="navigate('/tasks/completed')">
+    <mat-icon>done_all</mat-icon>
+    Completed
+  </button>
+  <button mat-flat-button color="accent" (click)="navigate('/tasks/add')">
+    <mat-icon>add_circle</mat-icon>
+    Add Task
+  </button>
+  <mat-slide-toggle
+    color="accent"
+    [checked]="isDarkMode"
+    (change)="toggleTheme()"
+    aria-label="Toggle dark mode"
+  >
+    Dark
+  </mat-slide-toggle>
+  <button mat-stroked-button color="primary" (click)="toggleAuth()">
+    <mat-icon>{{ isLoggedIn ? 'logout' : 'login' }}</mat-icon>
+    {{ isLoggedIn ? 'Logout' : 'Login' }}
+  </button>
+</mat-toolbar>

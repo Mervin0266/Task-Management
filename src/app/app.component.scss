@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+}
+
+.layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+}
+
+:host.dark-theme {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+:host.dark-theme .mat-card {
+  background: #1e293b;
+  color: #e2e8f0;
+}

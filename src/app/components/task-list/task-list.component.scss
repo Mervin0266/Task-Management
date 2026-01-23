@@ -1,0 +1,74 @@
+.task-list {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtitle {
+  color: #6b7280;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.title-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.task-title {
+  font-weight: 600;
+}
+
+.task-desc {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.pill.low {
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+.pill.medium {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.pill.high {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
+
+.empty {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+}
