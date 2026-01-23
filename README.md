@@ -46,3 +46,4 @@ Modern task tracker built with Angular 17 and Angular Material. Includes CRUD fl
 ## Notes
 - Budgets in `angular.json` increased to accommodate current bundle size; tighten if you add further optimizations.
 # Task-Management
+# Task-Management
