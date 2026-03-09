@@ -1,0 +1,155 @@
+<section class="dashboard">
+  <header class="dash-header">
+    <div>
+      <h2>Dashboard</h2>
+      <p class="subtitle">Your productivity at a glance</p>
+    </div>
+  </header>
+
+  <ng-container *ngIf="stats$ | async as stats">
+    <!-- Stat Cards -->
+    <div class="stat-grid">
+      <mat-card class="stat-card total">
+        <mat-icon>assignment</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.total }}</span>
+          <span class="stat-label">Total Tasks</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card completed">
+        <mat-icon>check_circle</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.completed }}</span>
+          <span class="stat-label">Completed</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card in-progress">
+        <mat-icon>pending</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.inProgress }}</span>
+          <span class="stat-label">In Progress</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card overdue">
+        <mat-icon>warning</mat-icon>
+        <div class="stat-info">
+          <span class="stat-value">{{ stats.overdue }}</span>
+          <span class="stat-label">Overdue</span>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Completion Rate + Charts Row -->
+    <div class="charts-grid">
+
+      <!-- Completion Rate Ring -->
+      <mat-card class="chart-card">
+        <mat-card-title>Completion Rate</mat-card-title>
+        <mat-card-content class="ring-content">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="50" class="ring-bg" />
+            <circle
+              cx="60" cy="60" r="50"
+              class="ring-fill"
+              [style.stroke-dasharray]="getCircumference(50)"
+              [style.stroke-dashoffset]="getDashOffset(stats.completed, stats.total, 50)"
+            />
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct">{{ stats.completionRate }}%</span>
+            <span class="ring-sub">complete</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Status Breakdown -->
+      <mat-card class="chart-card">
+        <mat-card-title>Status Breakdown</mat-card-title>
+        <mat-card-content>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>Pending</span>
+              <span class="bar-count">{{ stats.pending }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill pending" [style.width.%]="getStatusPercent(stats.pending, stats.total)"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>In Progress</span>
+              <span class="bar-count">{{ stats.inProgress }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill in-progress" [style.width.%]="getStatusPercent(stats.inProgress, stats.total)"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>Completed</span>
+              <span class="bar-count">{{ stats.completed }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill done" [style.width.%]="getStatusPercent(stats.completed, stats.total)"></div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Priority Breakdown -->
+      <mat-card class="chart-card">
+        <mat-card-title>Priority Breakdown</mat-card-title>
+        <mat-card-content>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>High</span>
+              <span class="bar-count">{{ stats.highPriority }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill high" [style.width.%]="getStatusPercent(stats.highPriority, stats.total)"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>Medium</span>
+              <span class="bar-count">{{ stats.mediumPriority }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill medium" [style.width.%]="getStatusPercent(stats.mediumPriority, stats.total)"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">
+              <span>Low</span>
+              <span class="bar-count">{{ stats.lowPriority }}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill low" [style.width.%]="getStatusPercent(stats.lowPriority, stats.total)"></div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Recent Tasks -->
+    <mat-card class="recent-card">
+      <mat-card-title>Recently Updated</mat-card-title>
+      <mat-card-content>
+        <div class="recent-list" *ngIf="recentTasks$ | async as recents">
+          <div class="recent-item" *ngFor="let task of recents">
+            <span class="recent-title">{{ task.title }}</span>
+            <span class="pill" [ngClass]="task.priority">{{ task.priority | titlecase }}</span>
+            <mat-chip [color]="task.status === 'completed' ? 'primary' : 'warn'" selected>
+              {{ task.status | titlecase }}
+            </mat-chip>
+            <span class="recent-date muted">{{ task.updatedAt | date:'mediumDate' }}</span>
+          </div>
+          <p *ngIf="recents.length === 0" class="muted">No tasks yet.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</section>

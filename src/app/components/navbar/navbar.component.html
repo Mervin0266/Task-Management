@@ -1,18 +1,26 @@
 <mat-toolbar color="primary" class="nav-bar" data-testid="navbar">
-  <div class="brand" (click)="navigate('/tasks')">
+  <div class="brand" routerLink="/dashboard">
     <mat-icon>task_alt</mat-icon>
     <span>FocusFlow</span>
   </div>
   <span class="spacer"></span>
-  <button mat-button (click)="navigate('/tasks')">
+  <button mat-button routerLink="/dashboard" routerLinkActive="nav-active">
+    <mat-icon>dashboard</mat-icon>
+    Dashboard
+  </button>
+  <button mat-button routerLink="/tasks" [routerLinkActiveOptions]="{exact:true}" routerLinkActive="nav-active">
     <mat-icon>list</mat-icon>
     All Tasks
   </button>
-  <button mat-button (click)="navigate('/tasks/completed')">
+  <button mat-button routerLink="/tasks/kanban" routerLinkActive="nav-active">
+    <mat-icon>view_kanban</mat-icon>
+    Kanban
+  </button>
+  <button mat-button routerLink="/tasks/completed" routerLinkActive="nav-active">
     <mat-icon>done_all</mat-icon>
     Completed
   </button>
-  <button mat-flat-button color="accent" (click)="navigate('/tasks/add')">
+  <button mat-flat-button color="accent" routerLink="/tasks/add">
     <mat-icon>add_circle</mat-icon>
     Add Task
   </button>

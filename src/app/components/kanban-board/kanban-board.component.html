@@ -1,0 +1,142 @@
+<section class="kanban-page">
+  <header class="kanban-header">
+    <div>
+      <h2>Kanban Board</h2>
+      <p class="subtitle">Drag tasks between columns to update their status.</p>
+    </div>
+  </header>
+
+  <div class="board">
+    <!-- PENDING -->
+    <div class="column">
+      <div class="col-header pending-header">
+        <mat-icon>radio_button_unchecked</mat-icon>
+        <span>Pending</span>
+        <span class="col-badge">{{ pendingTasks.length }}</span>
+      </div>
+      <div
+        cdkDropList
+        id="pending-list"
+        [cdkDropListData]="pendingTasks"
+        [cdkDropListConnectedTo]="['inprogress-list', 'completed-list']"
+        (cdkDropListDropped)="drop($event, 'pending')"
+        class="card-list"
+      >
+        <mat-card
+          *ngFor="let task of pendingTasks"
+          cdkDrag
+          class="task-card"
+          [ngClass]="getPriorityClass(task.priority)"
+        >
+          <div cdkDragHandle class="drag-handle">
+            <mat-icon>drag_indicator</mat-icon>
+          </div>
+          <div class="card-body">
+            <span class="card-title">{{ task.title }}</span>
+            <span class="card-desc muted">{{ task.description | slice:0:80 }}{{ task.description.length > 80 ? '…' : '' }}</span>
+            <div class="card-meta">
+              <span class="pill" [ngClass]="task.priority">{{ task.priority | titlecase }}</span>
+              <span class="muted due-text">
+                <mat-icon inline>calendar_today</mat-icon>
+                {{ task.dueDate | date:'MMM d' }}
+              </span>
+            </div>
+          </div>
+          <mat-progress-bar [value]="task.progress" color="accent" class="card-progress"></mat-progress-bar>
+        </mat-card>
+
+        <div *ngIf="pendingTasks.length === 0" class="empty-col">
+          No pending tasks 🎉
+        </div>
+      </div>
+    </div>
+
+    <!-- IN PROGRESS -->
+    <div class="column">
+      <div class="col-header inprogress-header">
+        <mat-icon>pending</mat-icon>
+        <span>In Progress</span>
+        <span class="col-badge">{{ inProgressTasks.length }}</span>
+      </div>
+      <div
+        cdkDropList
+        id="inprogress-list"
+        [cdkDropListData]="inProgressTasks"
+        [cdkDropListConnectedTo]="['pending-list', 'completed-list']"
+        (cdkDropListDropped)="drop($event, 'in-progress')"
+        class="card-list"
+      >
+        <mat-card
+          *ngFor="let task of inProgressTasks"
+          cdkDrag
+          class="task-card"
+          [ngClass]="getPriorityClass(task.priority)"
+        >
+          <div cdkDragHandle class="drag-handle">
+            <mat-icon>drag_indicator</mat-icon>
+          </div>
+          <div class="card-body">
+            <span class="card-title">{{ task.title }}</span>
+            <span class="card-desc muted">{{ task.description | slice:0:80 }}{{ task.description.length > 80 ? '…' : '' }}</span>
+            <div class="card-meta">
+              <span class="pill" [ngClass]="task.priority">{{ task.priority | titlecase }}</span>
+              <span class="muted due-text">
+                <mat-icon inline>calendar_today</mat-icon>
+                {{ task.dueDate | date:'MMM d' }}
+              </span>
+            </div>
+          </div>
+          <mat-progress-bar [value]="task.progress" color="accent" class="card-progress"></mat-progress-bar>
+        </mat-card>
+
+        <div *ngIf="inProgressTasks.length === 0" class="empty-col">
+          Drag tasks here to start them
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLETED -->
+    <div class="column">
+      <div class="col-header completed-header">
+        <mat-icon>check_circle</mat-icon>
+        <span>Completed</span>
+        <span class="col-badge">{{ completedTasks.length }}</span>
+      </div>
+      <div
+        cdkDropList
+        id="completed-list"
+        [cdkDropListData]="completedTasks"
+        [cdkDropListConnectedTo]="['pending-list', 'inprogress-list']"
+        (cdkDropListDropped)="drop($event, 'completed')"
+        class="card-list"
+      >
+        <mat-card
+          *ngFor="let task of completedTasks"
+          cdkDrag
+          class="task-card done"
+          [ngClass]="getPriorityClass(task.priority)"
+        >
+          <div cdkDragHandle class="drag-handle">
+            <mat-icon>drag_indicator</mat-icon>
+          </div>
+          <div class="card-body">
+            <span class="card-title done-title">{{ task.title }}</span>
+            <span class="card-desc muted">{{ task.description | slice:0:80 }}{{ task.description.length > 80 ? '…' : '' }}</span>
+            <div class="card-meta">
+              <span class="pill" [ngClass]="task.priority">{{ task.priority | titlecase }}</span>
+              <span class="muted due-text">
+                <mat-icon inline>calendar_today</mat-icon>
+                {{ task.dueDate | date:'MMM d' }}
+              </span>
+            </div>
+          </div>
+          <mat-progress-bar [value]="100" color="primary" class="card-progress"></mat-progress-bar>
+        </mat-card>
+
+        <div *ngIf="completedTasks.length === 0" class="empty-col">
+          Drag tasks here to complete them ✅
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

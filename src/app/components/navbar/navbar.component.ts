@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -7,23 +6,31 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   @Output() themeToggled = new EventEmitter<boolean>();
 
   isDarkMode = false;
   isLoggedIn = false;
 
-  constructor(private readonly router: Router, private readonly auth: AuthService) {
+  private readonly themeKey = 'focusflow-dark-mode';
+
+  constructor(private readonly auth: AuthService) {
     this.auth.isLoggedIn$.subscribe((state) => (this.isLoggedIn = state));
   }
 
-  navigate(path: string): void {
-    this.router.navigate([path]);
+  ngOnInit(): void {
+    const saved = localStorage.getItem(this.themeKey);
+    if (saved === 'true') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-theme');
+      this.themeToggled.emit(true);
+    }
   }
 
   toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
     document.body.classList.toggle('dark-theme', this.isDarkMode);
+    localStorage.setItem(this.themeKey, String(this.isDarkMode));
     this.themeToggled.emit(this.isDarkMode);
   }
 
@@ -35,3 +42,4 @@ export class NavbarComponent {
     }
   }
 }
+

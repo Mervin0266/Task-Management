@@ -62,6 +62,46 @@ export class TaskService {
     return of(true);
   }
 
+  bulkDelete(ids: string[]): Observable<boolean> {
+    const updatedList = this.tasks$.value.filter((task: Task) => !ids.includes(task.id));
+    this.persist(updatedList);
+    return of(true);
+  }
+
+  bulkUpdateStatus(ids: string[], status: TaskStatus): Observable<boolean> {
+    const updatedList = this.tasks$.value.map((task: Task) =>
+      ids.includes(task.id)
+        ? { ...task, status, progress: status === 'completed' ? 100 : this.getProgressForStatus(status), updatedAt: new Date().toISOString() }
+        : task
+    );
+    this.persist(updatedList);
+    return of(true);
+  }
+
+  exportCsv(): void {
+    const tasks = this.tasks$.value;
+    const headers = ['Title', 'Description', 'Category', 'Priority', 'Status', 'Progress', 'Due Date', 'Tags', 'Created At'];
+    const rows = tasks.map(t => [
+      `"${t.title.replace(/"/g, '""')}"`,
+      `"${t.description.replace(/"/g, '""')}"`,
+      t.categoryId,
+      t.priority,
+      t.status,
+      t.progress,
+      t.dueDate,
+      `"${(t.tags || []).join('; ')}"`,
+      t.createdAt
+    ]);
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `focusflow-tasks-${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   updateStatus(id: string, status: TaskStatus): Observable<Task | undefined> {
     return this.updateTask(id, {
       status,

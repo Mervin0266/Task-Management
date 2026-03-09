@@ -5,6 +5,7 @@ import { Category, Task, TaskPriority, TaskStatus } from '../../models/task.mode
 import { TaskService } from '../../services/task.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface FilterState {
   search: string;
@@ -21,7 +22,7 @@ interface FilterState {
 export class TaskListComponent implements OnInit {
   tasks$!: Observable<Task[]>;
   categories$!: Observable<Category[]>;
-  displayedColumns = ['title', 'category', 'priority', 'dueDate', 'progress', 'status', 'actions'];
+  displayedColumns = ['select', 'title', 'category', 'priority', 'dueDate', 'progress', 'status', 'actions'];
   categoryNames: Record<string, string> = {};
 
   filters: FilterState = {
@@ -30,11 +31,14 @@ export class TaskListComponent implements OnInit {
     priority: 'all'
   };
 
+  selectedIds = new Set<string>();
+
   constructor(
     private readonly taskService: TaskService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private readonly snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -85,4 +89,67 @@ export class TaskListComponent implements OnInit {
   getCategoryName(categoryId: string): string {
     return this.categoryNames[categoryId] || '—';
   }
+
+  // ── Bulk selection ──────────────────────────────────────────────
+  isSelected(id: string): boolean {
+    return this.selectedIds.has(id);
+  }
+
+  toggleSelect(id: string): void {
+    if (this.selectedIds.has(id)) {
+      this.selectedIds.delete(id);
+    } else {
+      this.selectedIds.add(id);
+    }
+    this.selectedIds = new Set(this.selectedIds); // trigger CD
+  }
+
+  selectAll(tasks: Task[]): void {
+    if (this.selectedIds.size === tasks.length) {
+      this.selectedIds = new Set();
+    } else {
+      this.selectedIds = new Set(tasks.map(t => t.id));
+    }
+  }
+
+  allSelected(tasks: Task[]): boolean {
+    return tasks.length > 0 && this.selectedIds.size === tasks.length;
+  }
+
+  bulkMarkDone(): void {
+    const ids = Array.from(this.selectedIds);
+    this.taskService.bulkUpdateStatus(ids, 'completed').subscribe(() => {
+      this.snackBar.open(`${ids.length} task(s) marked as completed`, 'OK', { duration: 2500 });
+      this.selectedIds = new Set();
+    });
+  }
+
+  bulkDelete(): void {
+    const ids = Array.from(this.selectedIds);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Selected',
+        message: `Delete ${ids.length} selected task(s)? This cannot be undone.`
+      }
+    });
+    dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.taskService.bulkDelete(ids).subscribe(() => {
+          this.snackBar.open(`${ids.length} task(s) deleted`, 'OK', { duration: 2500 });
+          this.selectedIds = new Set();
+        });
+      }
+    });
+  }
+
+  exportCsv(): void {
+    this.taskService.exportCsv();
+    this.snackBar.open('CSV exported!', 'OK', { duration: 2000 });
+  }
+
+  clearSelection(): void {
+    this.selectedIds = new Set();
+  }
 }
+
+

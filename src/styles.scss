@@ -39,3 +39,185 @@ $task-tracker-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* ─── Dark Theme ─────────────────────────────────────────── */
+:root {
+  --dark-bg:        #0f172a;
+  --dark-surface:   #1e293b;
+  --dark-surface-2: #273548;
+  --dark-border:    #334155;
+  --dark-text:      #f1f5f9;
+  --dark-subtext:   #94a3b8;
+}
+
+body.dark-theme {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+
+  /* Page wrappers */
+  .page-wrapper,
+  .task-list,
+  .dashboard,
+  .kanban-board { background: var(--dark-bg); }
+
+  h2, h3, h4, p, span, label { color: var(--dark-text); }
+
+  /* ── Mat Card ─────────────────────── */
+  mat-card, .mat-mdc-card {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border: 1px solid var(--dark-border);
+    box-shadow: 0 2px 12px rgba(0,0,0,.4) !important;
+
+    mat-card-title, mat-card-content,
+    .mat-mdc-card-title, .mat-mdc-card-content,
+    p, span, label { color: var(--dark-text) !important; }
+  }
+
+  /* ── Mat Table ────────────────────── */
+  .mat-mdc-table, mat-table {
+    background: var(--dark-surface) !important;
+
+    th.mat-mdc-header-cell, th.mat-header-cell {
+      background: var(--dark-surface-2) !important;
+      color: var(--dark-subtext) !important;
+      border-bottom-color: var(--dark-border) !important;
+    }
+
+    td.mat-mdc-cell, td.mat-cell {
+      background: var(--dark-surface) !important;
+      color: var(--dark-text) !important;
+      border-bottom-color: var(--dark-border) !important;
+    }
+
+    tr.mat-mdc-row:hover td,
+    tr.mat-row:hover td {
+      background: var(--dark-surface-2) !important;
+    }
+
+    tr.selected-row td {
+      background: #2d2060 !important;
+    }
+  }
+
+  /* ── Mat Form Field ───────────────── */
+  .mat-mdc-form-field, mat-form-field {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--dark-border) !important;
+    }
+    .mat-mdc-input-element,
+    input, textarea {
+      color: var(--dark-text) !important;
+      caret-color: var(--dark-text);
+    }
+    .mat-mdc-floating-label, label {
+      color: var(--dark-subtext) !important;
+    }
+    .mat-mdc-select-value, .mat-select-value { color: var(--dark-text) !important; }
+    .mat-mdc-select-arrow, .mat-select-arrow { color: var(--dark-subtext) !important; }
+    .mat-icon { color: var(--dark-subtext) !important; }
+  }
+
+  /* ── Mat Select Panel ─────────────── */
+  .mat-mdc-select-panel, .mat-select-panel {
+    background: var(--dark-surface-2) !important;
+    .mat-mdc-option, .mat-option {
+      color: var(--dark-text) !important;
+      &:hover, &.mat-mdc-option-active, &.mat-active {
+        background: var(--dark-border) !important;
+      }
+    }
+  }
+
+  /* ── Mat Chip ─────────────────────── */
+  .mat-mdc-chip.mat-mdc-standard-chip,
+  mat-chip {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+  }
+
+  /* ── Mat Progress Bar (track) ─────── */
+  .mdc-linear-progress__buffer-bar {
+    background: var(--dark-border) !important;
+  }
+
+  /* ── Bulk action bar ──────────────── */
+  .bulk-bar {
+    background: #1e3a5f !important;
+    border-color: #2563eb !important;
+    color: var(--dark-text) !important;
+    .bulk-count, span, strong { color: var(--dark-text) !important; }
+  }
+
+  /* ── Due-date badges ──────────────── */
+  .due-badge {
+    background: #14532d !important;
+    color: #86efac !important;
+    &.overdue   { background: #7f1d1d !important; color: #fca5a5 !important; }
+    &.due-today { background: #78350f !important; color: #fcd34d !important; }
+    &.done      { background: #1e3a2a !important; color: #6ee7b7 !important; }
+  }
+
+  /* ── Priority pills (task list) ───── */
+  .pill {
+    &.high   { background: #7f1d1d; color: #fca5a5; }
+    &.medium { background: #78350f; color: #fcd34d; }
+    &.low    { background: #14532d; color: #86efac; }
+  }
+
+  /* ── Dashboard breakdown cards ─────── */
+  .breakdown-card {
+    background: var(--dark-surface-2) !important;
+    .bar-track { background: var(--dark-border) !important; }
+    .bar-label, .bar-value { color: var(--dark-subtext) !important; }
+  }
+
+  /* ── Dashboard chart ring ─────────── */
+  .ring-track { stroke: var(--dark-border) !important; }
+  .ring-pct { fill: var(--dark-text) !important; }
+  .ring-label { fill: var(--dark-subtext) !important; }
+
+  /* ── Dashboard recent task rows ─────── */
+  .recent-row {
+    border-bottom-color: var(--dark-border) !important;
+    .task-name { color: var(--dark-text) !important; }
+    .task-meta { color: var(--dark-subtext) !important; }
+    &:hover { background: var(--dark-surface-2) !important; }
+  }
+
+  /* ── Stat cards subtitle text ─────── */
+  .stat-label { color: rgba(255,255,255,0.8) !important; }
+
+  /* ── Kanban columns ───────────────── */
+  .kanban-column {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+
+    .column-header { color: var(--dark-text) !important; }
+  }
+
+  /* ── Kanban task cards ────────────── */
+  .task-card, .cdk-drag {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+
+    .task-title, .task-desc,
+    .due-date, .card-title { color: var(--dark-text) !important; }
+
+    .task-meta  { color: var(--dark-subtext) !important; }
+  }
+
+  /* ── Mat Snack Bar ────────────────── */
+  .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+  }
+
+  /* ── Scrollbar ────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--dark-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--dark-border); border-radius: 3px; }
+}
